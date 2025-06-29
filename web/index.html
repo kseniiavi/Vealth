@@ -10,6 +10,7 @@
   <meta name="apple-mobile-web-app-title" content="Vealth">
   <title>Vealth - Horse Dental Analysis</title>
   <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
 
   <style>
     body {
@@ -50,13 +51,28 @@
       font-weight: 300;
       color: rgba(255,255,255,0.7);
     }
+
+    .spinner {
+      width: 24px;
+      height: 24px;
+      border: 3px solid rgba(255,255,255,0.3);
+      border-top: 3px solid white;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-top: 32px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
   </style>
-  
 </head>
 <body>
   <div id="loading" class="loading">
-    <h1>Vealth</h1>
-    <p>Vealth For Better Health And More Wealth</p>
+    <div class="horse"></div>
+    <div class="title">Vealth</div>
+    <div class="subtitle">Vealth for better health and more wealth</div>
     <div class="spinner"></div>
   </div>
 
@@ -67,7 +83,7 @@
           engineInitializer.initializeEngine().then(function(appRunner) {
             document.getElementById('loading').style.display = 'none';
             appRunner.runApp();
-            
+
             if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
               navigator.mediaDevices.getUserMedia({ video: true })
                 .then(function(stream) {
