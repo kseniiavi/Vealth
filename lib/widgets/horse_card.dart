@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../constants/colors.dart';
 import '../models/horse.dart';
 import '../models/analysis_result.dart';
+import '../models/urgency_level.dart';
 
 class HorseCard extends StatelessWidget {
   final Horse horse;

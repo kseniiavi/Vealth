@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'dart:typed_data';
 import '../models/analysis_result.dart';
+import '../models/urgency_level.dart';
 
 class AIService {
   static final AIService _instance = AIService._internal();

@@ -10,6 +10,8 @@ import '../widgets/bottom_navigation.dart';
 import 'camera_screen.dart';
 import 'horses_screen.dart';
 import 'analysis_result_screen.dart';
+import '../models/analysis_result.dart';
+import '../models/urgency_level.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
