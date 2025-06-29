@@ -78,4 +78,4 @@ class AppStrings {
   static const String errorNameRequired = 'Name is required.';
   static const String errorLoginFailed = 'Login failed. Please check your credentials.';
   static const String errorImageCapture = 'Failed to capture image.';
-  static const String errorAnalysisFailed = 'Analysis failed. Please try
+  static const String errorAnalysisFailed = 'Analysis failed. Please try again.';
