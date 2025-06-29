@@ -431,6 +431,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<AuthService>(context).currentUser;
+    final name = user?.name ?? 'User';
 
     return Scaffold(
       backgroundColor: AppColors.background,
