@@ -28,7 +28,7 @@ class AuthService extends ChangeNotifier {
   bool _isLoggedIn = false;
 
   User? get currentUser => _currentUser;
-  bool get isLoggedIn => _isLoggedIn;
+  bool get isUserLoggedIn => _isLoggedIn;
 
   Future<bool> login(String email, String password) async {
     try {
@@ -65,7 +65,6 @@ class AuthService extends ChangeNotifier {
     }
   }
 
-  /// ✅ This is the correct method used in SplashScreen
   Future<bool> isLoggedIn() async {
     try {
       final prefs = await SharedPreferences.getInstance();
