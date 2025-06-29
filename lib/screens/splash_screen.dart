@@ -57,7 +57,7 @@ class _SplashScreenState extends State<SplashScreen>
     if (!mounted) return;
 
     final authService = Provider.of<AuthService>(context, listen: false);
-    final isLoggedIn = await authService.isLoggedIn();
+    final isLoggedIn = authService.isLoggedIn;
 
     if (!mounted) return;
 
