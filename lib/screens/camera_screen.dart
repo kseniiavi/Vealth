@@ -78,7 +78,6 @@ class _CameraScreenState extends State<CameraScreen> {
 
       final result = await AIService.instance.analyzeTeethImage(
         horseId: _selectedHorseId!,
-        imageBytes: bytes,
         imagePath: _capturedImage!.path,
       );
 
