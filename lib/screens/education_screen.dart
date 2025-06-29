@@ -299,7 +299,7 @@ class CommonProblemsTab extends StatelessWidget {
             ],
             causes: 'Trauma, age-related brittleness, or severe hooks',
             treatment: 'Immediate veterinary attention, possible extraction',
-            color: Colors.red[800]!,
+            color: Color(0xFFB71C1C),
           ),
 
           const DentalProblemCard(
