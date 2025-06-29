@@ -24,7 +24,7 @@ class AIService {
     final random = Random();
 
     final estimatedAge = 3 + random.nextDouble() * 20; // 3 to 23 years
-    final confidence = 60 + random.nextDouble() * 40; // 60% to 100%
+    final confidence = 0.6 + random.nextDouble() * 0.4; // 60% to 100%
     final observations = [
       'Visible central incisors',
       'Slight enamel wear',
@@ -42,13 +42,15 @@ class AIService {
     return AnalysisResult(
       id: id,
       horseId: horseId,
+      imagePath: imagePath,
       analysisDate: now,
-      estimatedAge: estimatedAge,
+      estimatedAge: estimatedAge.round(),
       confidence: confidence,
       observations: observations,
       recommendations: recommendations,
       urgentConcerns: urgentConcerns,
       urgencyLevel: urgency,
+      additionalData: {},
     );
   }
 
@@ -66,5 +68,10 @@ class AIService {
     if (age < 10) return [];
     if (age < 18) return ['Early signs of enamel erosion'];
     return ['Tooth wear', 'Potential gum recession', 'Evaluate for wave mouth'];
+  }
+
+  bool validateImage(List<int> bytes) {
+    // Placeholder: Require image > 10KB to consider it valid
+    return bytes.length > 10000;
   }
 }
