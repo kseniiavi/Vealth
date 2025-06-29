@@ -18,19 +18,16 @@ class _SplashScreenState extends State<SplashScreen>
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
   late Animation<double> _scaleAnimation;
+  late Animation<double> _bounceAnimation;
 
   @override
   void initState() {
     super.initState();
-    _setupAnimations();
-    _checkAuthenticationStatus();
-  }
 
-  void _setupAnimations() {
     _animationController = AnimationController(
-      duration: const Duration(seconds: 2),
       vsync: this,
-    );
+      duration: const Duration(milliseconds: 1000),
+    )..repeat(reverse: true);
 
     _fadeAnimation = Tween<double>(
       begin: 0.0,
@@ -48,7 +45,11 @@ class _SplashScreenState extends State<SplashScreen>
       curve: Curves.elasticOut,
     ));
 
-    _animationController.forward();
+    _bounceAnimation = Tween<double>(begin: 0, end: 10).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
+    );
+
+    _checkAuthenticationStatus();
   }
 
   Future<void> _checkAuthenticationStatus() async {
@@ -63,9 +64,8 @@ class _SplashScreenState extends State<SplashScreen>
 
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
-        builder: (context) => loggedIn
-            ? const HomeScreen()
-            : const LoginScreen(),
+        builder: (context) =>
+            loggedIn ? const HomeScreen() : const LoginScreen(),
       ),
     );
   }
@@ -91,16 +91,26 @@ class _SplashScreenState extends State<SplashScreen>
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SizedBox(
-                      width: 120,
-                      height: 120,
-                      child: Image.asset(
-                        'assets/horse_run.gif',
-                        fit: BoxFit.contain,
-                        errorBuilder: (context, error, stackTrace) => const Icon(
-                          Icons.pets,
-                          size: 60,
-                          color: AppColors.primary,
+                    AnimatedBuilder(
+                      animation: _bounceAnimation,
+                      builder: (context, child) {
+                        return Transform.translate(
+                          offset: Offset(0, -_bounceAnimation.value),
+                          child: child,
+                        );
+                      },
+                      child: SizedBox(
+                        width: 120,
+                        height: 120,
+                        child: Image.asset(
+                          'assets/horse_run.gif',
+                          fit: BoxFit.contain,
+                          errorBuilder: (context, error, stackTrace) =>
+                              const Icon(
+                            Icons.pets,
+                            size: 60,
+                            color: AppColors.primary,
+                          ),
                         ),
                       ),
                     ),
@@ -121,15 +131,6 @@ class _SplashScreenState extends State<SplashScreen>
                         fontSize: 14,
                         color: Colors.white70,
                         fontWeight: FontWeight.w300,
-                      ),
-                    ),
-                    const SizedBox(height: 64),
-                    const SizedBox(
-                      width: 24,
-                      height: 24,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                       ),
                     ),
                   ],
