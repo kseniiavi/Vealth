@@ -69,6 +69,12 @@ class AppStrings {
   static const String terms = 'Terms of Service';
   static const String logout = 'Sign Out';
 
+  static const String successRegistration = 'Registration successful!';
+  static const String registerSubtitle = 'Join Vealth to start monitoring your horses.';
+  static const String colorLabel = 'Color';
+  static const String notesLabel = 'Notes';
+  static const String saveHorse = 'Save Horse';
+
   // Errors
   static const String errorGeneric = 'An error occurred. Please try again.';
   static const String errorNetwork = 'Network error. Check your connection.';
