@@ -53,7 +53,7 @@ class _SplashScreenState extends State<SplashScreen>
 
   Future<void> _checkAuthenticationStatus() async {
     await Future.delayed(const Duration(seconds: 2));
-    
+
     if (!mounted) return;
 
     final authService = Provider.of<AuthService>(context, listen: false);
@@ -79,7 +79,7 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.primary,
+      backgroundColor: const Color(0xFF0A1E3F), // Dark navy blue
       body: Center(
         child: AnimatedBuilder(
           animation: _animationController,
@@ -91,31 +91,25 @@ class _SplashScreenState extends State<SplashScreen>
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Container(
+                    // 🐎 Running horse animation (GIF)
+                    SizedBox(
                       width: 120,
                       height: 120,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(24),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.2),
-                            blurRadius: 20,
-                            offset: const Offset(0, 10),
-                          ),
-                        ],
-                      ),
-                      child: const Icon(
-                        Icons.pets,
-                        size: 60,
-                        color: AppColors.primary,
+                      child: Image.asset(
+                        'assets/images/horse_run.gif',
+                        fit: BoxFit.contain,
+                        errorBuilder: (context, error, stackTrace) => const Icon(
+                          Icons.pets,
+                          size: 60,
+                          color: AppColors.primary,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 32),
                     const Text(
-                      AppStrings.appName,
+                      'Vealth',
                       style: TextStyle(
-                        fontSize: 36,
+                        fontSize: 32,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                         letterSpacing: 2,
@@ -123,9 +117,9 @@ class _SplashScreenState extends State<SplashScreen>
                     ),
                     const SizedBox(height: 8),
                     const Text(
-                      AppStrings.appDescription,
+                      'Vealth for better health and more wealth',
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 14,
                         color: Colors.white70,
                         fontWeight: FontWeight.w300,
                       ),
