@@ -50,7 +50,7 @@ class StorageService {
         horses.add(horse);
       }
 
-      final horsesJson = horses.map((h) => h.toJsonString()).toList();
+      final horsesJson = horses.cast<Horse>().map((h) => h.toJsonString()).toList();
       await prefs.setStringList(_horsesKey, horsesJson);
     } catch (e) {
       throw Exception('Failed to save horse: $e');
@@ -66,7 +66,7 @@ class StorageService {
       final analysisResults = await getAnalysisResults();
       analysisResults.removeWhere((result) => result.horseId == horseId);
       
-      final horsesJson = horses.map((h) => h.toJsonString()).toList();
+      final horsesJson = horses.cast<Horse>().map((h) => h.toJsonString()).toList();
       final resultsJson = analysisResults.map((r) => r.toJsonString()).toList();
       
       await prefs.setStringList(_horsesKey, horsesJson);
