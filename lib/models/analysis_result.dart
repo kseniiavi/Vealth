@@ -1,6 +1,5 @@
 import 'dart:convert';
-
-enum UrgencyLevel { none, low, medium, high }
+import 'urgency_level.dart';
 
 class AnalysisResult {
   final String id;
