@@ -57,13 +57,13 @@ class _SplashScreenState extends State<SplashScreen>
     if (!mounted) return;
 
     final authService = Provider.of<AuthService>(context, listen: false);
-    final isLoggedIn = await authService.isLoggedIn(); // ✅ CORRECTLY CALLED
+    final loggedIn = await authService.isLoggedIn();
 
     if (!mounted) return;
 
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
-        builder: (context) => isLoggedIn
+        builder: (context) => loggedIn
             ? const HomeScreen()
             : const LoginScreen(),
       ),
@@ -79,7 +79,7 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0A1E3F), // Dark navy blue
+      backgroundColor: const Color(0xFF0A1E3F),
       body: Center(
         child: AnimatedBuilder(
           animation: _animationController,
@@ -91,12 +91,11 @@ class _SplashScreenState extends State<SplashScreen>
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // 🐎 Running horse animation (GIF)
                     SizedBox(
                       width: 120,
                       height: 120,
                       child: Image.asset(
-                        'assets/horse_run.gif', // ✅ Corrected path for Flutter Web
+                        'assets/horse_run.gif',
                         fit: BoxFit.contain,
                         errorBuilder: (context, error, stackTrace) => const Icon(
                           Icons.pets,
