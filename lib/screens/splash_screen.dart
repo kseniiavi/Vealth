@@ -57,7 +57,7 @@ class _SplashScreenState extends State<SplashScreen>
     if (!mounted) return;
 
     final authService = Provider.of<AuthService>(context, listen: false);
-    final isLoggedIn = authService.isLoggedIn;
+    final isLoggedIn = await authService.isLoggedIn(); // ✅ CORRECTLY CALLED
 
     if (!mounted) return;
 
@@ -96,7 +96,7 @@ class _SplashScreenState extends State<SplashScreen>
                       width: 120,
                       height: 120,
                       child: Image.asset(
-                        'assets/images/horse_run.gif',
+                        'assets/horse_run.gif', // ✅ Corrected path for Flutter Web
                         fit: BoxFit.contain,
                         errorBuilder: (context, error, stackTrace) => const Icon(
                           Icons.pets,
