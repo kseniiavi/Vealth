@@ -61,7 +61,7 @@ class AuthService extends ChangeNotifier {
     }
   }
 
-  Future<bool> isLoggedIn() async {
+Future<bool> checkLoginStatus() async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final userSession = prefs.getString('user_session');
