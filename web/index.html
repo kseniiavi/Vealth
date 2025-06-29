@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base href="$FLUTTER_BASE_HREF">
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="Vealth - AI-driven horse teeth age analysis app">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Vealth">
+  <title>Vealth - Horse Dental Analysis</title>
+  <link rel="manifest" href="manifest.json">
+
+  <style>
+    body { margin: 0; padding: 0; font-family: 'Roboto', sans-serif; }
+    .loading {
+      display: flex; flex-direction: column; justify-content: center;
+      align-items: center; height: 100vh;
+      background: linear-gradient(135deg, #2E7D32, #4CAF50); color: white;
+    }
+    .spinner {
+      width: 40px; height: 40px; border: 4px solid rgba(255,255,255,0.3);
+      border-top: 4px solid white; border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div id="loading" class="loading">
+    <h1>Vealth</h1>
+    <p>AI-Powered Horse Dental Analysis</p>
+    <div class="spinner"></div>
+  </div>
+
+  <script>
+    window.addEventListener('load', function(ev) {
+      _flutter.loader.loadEntrypoint({
+        onEntrypointLoaded: function(engineInitializer) {
+          engineInitializer.initializeEngine().then(function(appRunner) {
+            document.getElementById('loading').style.display = 'none';
+            appRunner.runApp();
+            
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+              navigator.mediaDevices.getUserMedia({ video: true })
+                .then(function(stream) {
+                  stream.getTracks().forEach(track => track.stop());
+                })
+                .catch(function(err) {
+                  console.log('Camera permission not granted:', err);
+                });
+            }
+          });
+        }
+      });
+    });
+  </script>
+</body>
+</html>
