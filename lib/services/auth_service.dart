@@ -11,12 +11,16 @@ class User {
   User({required this.id, required this.name, required this.email});
 
   Map<String, dynamic> toJson() => {
-    'id': id, 'name': name, 'email': email,
-  };
+        'id': id,
+        'name': name,
+        'email': email,
+      };
 
   factory User.fromJson(Map<String, dynamic> json) => User(
-    id: json['id'], name: json['name'], email: json['email'],
-  );
+        id: json['id'],
+        name: json['name'],
+        email: json['email'],
+      );
 }
 
 class AuthService extends ChangeNotifier {
@@ -29,7 +33,7 @@ class AuthService extends ChangeNotifier {
   Future<bool> login(String email, String password) async {
     try {
       await Future.delayed(const Duration(seconds: 1));
-      
+
       final user = User(
         id: _generateUserId(email),
         name: _extractNameFromEmail(email),
@@ -49,7 +53,7 @@ class AuthService extends ChangeNotifier {
   Future<bool> register(String name, String email, String password) async {
     try {
       await Future.delayed(const Duration(seconds: 1));
-      
+
       final user = User(id: _generateUserId(email), name: name, email: email);
       await _saveUserSession(user);
       _currentUser = user;
@@ -61,11 +65,12 @@ class AuthService extends ChangeNotifier {
     }
   }
 
-Future<bool> checkLoginStatus() async {
+  /// ✅ This is the correct method used in SplashScreen
+  Future<bool> isLoggedIn() async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final userSession = prefs.getString('user_session');
-      
+
       if (userSession != null) {
         final userData = jsonDecode(userSession);
         _currentUser = User.fromJson(userData);
@@ -73,6 +78,7 @@ Future<bool> checkLoginStatus() async {
         notifyListeners();
         return true;
       }
+
       return false;
     } catch (e) {
       return false;
@@ -92,8 +98,11 @@ Future<bool> checkLoginStatus() async {
 
   String _extractNameFromEmail(String email) {
     final username = email.split('@')[0];
-    return username.replaceAll('.', ' ').split(' ')
-        .map((word) => word.isEmpty ? '' : word[0].toUpperCase() + word.substring(1))
+    return username
+        .replaceAll('.', ' ')
+        .split(' ')
+        .map((word) =>
+            word.isEmpty ? '' : word[0].toUpperCase() + word.substring(1))
         .join(' ');
   }
 }
