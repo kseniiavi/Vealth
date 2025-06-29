@@ -40,6 +40,9 @@ class AppStrings {
   static const String horseNameLabel = 'Horse Name';
   static const String breedLabel = 'Breed';
   static const String ageLabel = 'Age (if known)';
+  static const String colorLabel = 'Color';
+  static const String notesLabel = 'Notes';
+  static const String saveHorse = 'Save Horse';
 
   // Analysis
   static const String analyze = 'Analyze';
@@ -69,11 +72,11 @@ class AppStrings {
   static const String terms = 'Terms of Service';
   static const String logout = 'Sign Out';
 
+  // Success
+  static const String successLogin = 'Logged in successfully!';
+  static const String successHorseSaved = 'Horse saved!';
   static const String successRegistration = 'Registration successful!';
-  static const String registerSubtitle = 'Join Vealth to start monitoring your horses.';
-  static const String colorLabel = 'Color';
-  static const String notesLabel = 'Notes';
-  static const String saveHorse = 'Save Horse';
+  static const String registerSubtitle = 'Track your horse’s dental health easily.';
 
   // Errors
   static const String errorGeneric = 'An error occurred. Please try again.';
