@@ -4,6 +4,20 @@ import '../models/horse.dart';
 import '../models/analysis_result.dart';
 import '../models/urgency_level.dart';
 
+Color _getUrgencyColor(UrgencyLevel level) {
+  switch (level) {
+    case UrgencyLevel.none:
+      return Colors.grey;
+    case UrgencyLevel.low:
+      return Colors.green;
+    case UrgencyLevel.medium:
+      return Colors.orange;
+    case UrgencyLevel.high:
+      return Colors.red;
+  }
+  return Colors.grey; // ✅ fallback to satisfy Dart
+}
+
 class HorseCard extends StatelessWidget {
   final Horse horse;
   final List<AnalysisResult> analyses;

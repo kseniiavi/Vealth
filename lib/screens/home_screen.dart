@@ -291,7 +291,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            ...._recentAnalyses.map((analysis) => _buildAnalysisItem(analysis)),
+            ..._recentAnalyses.map((analysis) => _buildAnalysisItem(analysis)),
           ],
         ),
       ),
