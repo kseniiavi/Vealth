@@ -1,79 +1,70 @@
 import 'dart:math';
-import 'dart:typed_data';
+import 'dart:async';
+import 'package:uuid/uuid.dart';
 import '../models/analysis_result.dart';
 import '../models/urgency_level.dart';
 
 class AIService {
-  static final AIService _instance = AIService._internal();
-  static AIService get instance => _instance;
+  static final AIService instance = AIService._internal();
+  final _uuid = const Uuid();
+
   AIService._internal();
-  
-  final Random _random = Random();
 
   Future<AnalysisResult> analyzeTeethImage({
     required String horseId,
-    required Uint8List imageBytes,
     required String imagePath,
   }) async {
-    await Future.delayed(const Duration(seconds: 2, milliseconds: 500));
+    await Future.delayed(const Duration(seconds: 2)); // simulate analysis time
     return _generateMockAnalysis(horseId, imagePath);
   }
 
   AnalysisResult _generateMockAnalysis(String horseId, String imagePath) {
-    final baseAge = _random.nextInt(25) + 3;
-    final confidenceVariation = _random.nextDouble() * 0.3 + 0.7;
-    
+    final id = _uuid.v4();
+    final now = DateTime.now();
+    final random = Random();
+
+    final estimatedAge = 3 + random.nextDouble() * 20; // 3 to 23 years
+    final confidence = 60 + random.nextDouble() * 40; // 60% to 100%
+    final observations = [
+      'Visible central incisors',
+      'Slight enamel wear',
+      'Mild tartar accumulation'
+    ];
+    final recommendations = _generateRecommendations(estimatedAge);
+    final urgentConcerns = _generateUrgentConcerns(estimatedAge);
+
+    final urgency = urgentConcerns.isEmpty
+        ? UrgencyLevel.none
+        : estimatedAge > 18
+            ? UrgencyLevel.high
+            : UrgencyLevel.medium;
+
     return AnalysisResult(
-      id: _generateResultId(),
+      id: id,
       horseId: horseId,
-      imagePath: imagePath,
-      estimatedAge: baseAge,
-      confidence: confidenceVariation,
-      observations: _generateHealthObservations(baseAge),
-      recommendations: _generateRecommendations(baseAge),
-      analysisDate: DateTime.now(),
-      urgentConcerns: _generateUrgentConcerns(baseAge),
+      analysisDate: now,
+      estimatedAge: estimatedAge,
+      confidence: confidence,
+      observations: observations,
+      recommendations: recommendations,
+      urgentConcerns: urgentConcerns,
+      urgencyLevel: urgency,
     );
   }
 
-  List<String> _generateHealthObservations(int age) {
-    final observations = <String>[];
-    
-    if (age <= 5) {
-      observations.addAll([
-        'Deciduous teeth present with normal wear patterns',
-        'Central incisors show rectangular occlusal surfaces',
-        'Infundibular cups clearly visible',
-        'No abnormal wear detected',
-      ]);
-    } else if (age <= 10) {
-      observations.addAll([
-        'Permanent incisors fully erupted',
-        'Occlusal surfaces transitioning from rectangular to oval',
-        'Infundibular cups beginning to disappear',
-        'Normal age-appropriate wear patterns',
-      ]);
+  List<String> _generateRecommendations(double age) {
+    if (age < 5) {
+      return ['Monitor for tooth eruption', 'Introduce mild dental checks'];
+    } else if (age < 15) {
+      return ['Routine annual dental checkup', 'Ensure proper diet consistency'];
     } else {
-      observations.addAll([
-        'Triangular occlusal surfaces',
-        'Dental stars becoming more prominent',
-        'Galvayne\'s groove clearly visible',
-        'Increased tooth angulation',
-      ]);
+      return ['Soft feed recommended', 'Bi-annual dental care', 'Monitor wear regularly'];
     }
-    return observations;
   }
 
-  String _generateResultId() {
-    final timestamp = DateTime.now().millisecondsSinceEpoch;
-    final randomSuffix = _random.nextInt(9999).toString().padLeft(4, '0');
-    return 'analysis_${timestamp}_$randomSuffix';
-  }
-
-  bool validateImage(Uint8List imageBytes) {
-    if (imageBytes.isEmpty) return false;
-    if (imageBytes.length < 1000) return false;
-    if (imageBytes.length > 10 * 1024 * 1024) return false;
-    return true;
+  List<String> _generateUrgentConcerns(double age) {
+    if (age < 10) return [];
+    if (age < 18) return ['Early signs of enamel erosion'];
+    return ['Tooth wear', 'Potential gum recession', 'Evaluate for wave mouth'];
   }
 }
