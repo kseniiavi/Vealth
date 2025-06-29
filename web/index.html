@@ -1,102 +1,110 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <base href="$FLUTTER_BASE_HREF">
-  <meta charset="UTF-8">
-  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="Vealth - AI-driven horse teeth age analysis app">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="Vealth">
-  <title>Vealth - Horse Dental Analysis</title>
-  <link rel="manifest" href="manifest.json">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <head>
+    <base href="$FLUTTER_BASE_HREF">
+    <meta charset="UTF-8">
+    <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Vealth - AI-powered horse dental analysis app">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Vealth">
+    <meta name="theme-color" content="#0A1E3F">
+    <title>Vealth - Horse Dental Analysis</title>
 
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Roboto', sans-serif;
-      background-color: #0A1E3F;
-      color: white;
-    }
-  
-    .loading {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-  
-    .horse {
-      width: 100px;
-      height: 100px;
-      margin-bottom: 32px;
-      background-image: url('assets/images/horse_run.gif');
-      background-size: contain;
-      background-repeat: no-repeat;
-      background-position: center;
-    }
-  
-    .title {
-      font-size: 28px;
-      font-weight: bold;
-      letter-spacing: 1.5px;
-      margin-bottom: 8px;
-    }
-  
-    .subtitle {
-      font-size: 14px;
-      font-weight: 300;
-      color: rgba(255,255,255,0.7);
-    }
+    <link rel="manifest" href="site.webmanifest">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="shortcut icon" href="favicon.ico">
 
-    .spinner {
-      width: 24px;
-      height: 24px;
-      border: 3px solid rgba(255,255,255,0.3);
-      border-top: 3px solid white;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      margin-top: 32px;
-    }
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Roboto', sans-serif;
+        background-color: #0A1E3F;
+        color: white;
+      }
 
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-  </style>
-</head>
-<body>
-  <div id="loading" class="loading">
-    <div class="horse"></div>
-    <div class="title">Vealth</div>
-    <div class="subtitle">Vealth for better health and more wealth</div>
-    <div class="spinner"></div>
-  </div>
+      .loading {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        text-align: center;
+      }
 
-  <script>
-    window.addEventListener('load', function(ev) {
-      _flutter.loader.loadEntrypoint({
-        onEntrypointLoaded: function(engineInitializer) {
-          engineInitializer.initializeEngine().then(function(appRunner) {
-            document.getElementById('loading').style.display = 'none';
-            appRunner.runApp();
+      .horse {
+        width: 100px;
+        height: 100px;
+        background-image: url('assets/horse_run.gif');
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        margin-bottom: 24px;
+      }
 
-            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-              navigator.mediaDevices.getUserMedia({ video: true })
-                .then(function(stream) {
-                  stream.getTracks().forEach(track => track.stop());
-                })
-                .catch(function(err) {
-                  console.log('Camera permission not granted:', err);
-                });
-            }
-          });
-        }
+      .title {
+        font-size: 28px;
+        font-weight: bold;
+        margin: 0;
+      }
+
+      .subtitle {
+        font-size: 14px;
+        font-weight: 300;
+        margin-top: 6px;
+        color: rgba(255, 255, 255, 0.7);
+      }
+
+      .spinner {
+        width: 24px;
+        height: 24px;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-top: 3px solid white;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-top: 32px;
+      }
+
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="loading" class="loading">
+      <div class="horse"></div>
+      <div class="title">Vealth</div>
+      <div class="subtitle">Vealth for better health and more wealth</div>
+      <div class="spinner"></div>
+    </div>
+
+    <script>
+      window.addEventListener('load', function () {
+        _flutter.loader.loadEntrypoint({
+          onEntrypointLoaded: function (engineInitializer) {
+            engineInitializer.initializeEngine().then(function (appRunner) {
+              document.getElementById('loading').style.display = 'none';
+              appRunner.runApp();
+
+              if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ video: true })
+                  .then(function (stream) {
+                    stream.getTracks().forEach(track => track.stop());
+                  })
+                  .catch(function (err) {
+                    console.log('Camera permission not granted:', err);
+                  });
+              }
+            });
+          }
+        });
       });
-    });
-  </script>
-</body>
+    </script>
+  </body>
 </html>
