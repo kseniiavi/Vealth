@@ -44,8 +44,11 @@ class AuthService extends ChangeNotifier {
       _currentUser = user;
       _isLoggedIn = true;
       notifyListeners();
+
+      if (kDebugMode) print("✅ Login successful: ${user.email}");
       return true;
     } catch (e) {
+      if (kDebugMode) print("❌ Login failed: $e");
       return false;
     }
   }
@@ -54,13 +57,21 @@ class AuthService extends ChangeNotifier {
     try {
       await Future.delayed(const Duration(seconds: 1));
 
-      final user = User(id: _generateUserId(email), name: name, email: email);
+      final user = User(
+        id: _generateUserId(email),
+        name: name,
+        email: email,
+      );
+
       await _saveUserSession(user);
       _currentUser = user;
       _isLoggedIn = true;
       notifyListeners();
+
+      if (kDebugMode) print("✅ Registration successful: ${user.email}");
       return true;
     } catch (e) {
+      if (kDebugMode) print("❌ Registration failed: $e");
       return false;
     }
   }
@@ -70,37 +81,48 @@ class AuthService extends ChangeNotifier {
       final prefs = await SharedPreferences.getInstance();
       final userSession = prefs.getString('user_session');
 
-      if (userSession != null) {
+      if (kDebugMode) {
+        print("🔍 Checking stored user session...");
+        print("📦 Raw session data: $userSession");
+      }
+
+      if (userSession != null && userSession.isNotEmpty) {
         final userData = jsonDecode(userSession);
         _currentUser = User.fromJson(userData);
         _isLoggedIn = true;
         notifyListeners();
+
+        if (kDebugMode) print("✅ User is logged in: ${_currentUser!.email}");
         return true;
       }
 
+      if (kDebugMode) print("⚠️ No user session found.");
       return false;
     } catch (e) {
+      if (kDebugMode) print("❌ Error checking login status: $e");
       return false;
+    }
+  }
+
+  Future<void> logout() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove('user_session');
+
+      _currentUser = null;
+      _isLoggedIn = false;
+      notifyListeners();
+
+      if (kDebugMode) print("👋 User logged out.");
+    } catch (e) {
+      if (kDebugMode) print("❌ Error during logout: $e");
     }
   }
 
   Future<void> _saveUserSession(User user) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('user_session', jsonEncode(user.toJson()));
-  }
-  
-  Future<void> logout() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.remove('user_session');
-      _currentUser = null;
-      _isLoggedIn = false;
-      notifyListeners();
-    } catch (e) {
-      if (kDebugMode) {
-        print("❌ Error during logout: $e");
-      }
-    }
+    if (kDebugMode) print("💾 User session saved: ${user.email}");
   }
 
   String _generateUserId(String email) {
