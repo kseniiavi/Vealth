@@ -95,7 +95,6 @@ class StorageService {
     }
   }
 
-  // ✅ FIXED: Return nullable Horse?
   Future<Horse?> getHorse(String horseId) async {
     try {
       final horses = await getHorses();
