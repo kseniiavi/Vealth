@@ -42,30 +42,29 @@ class _SplashScreenState extends State<SplashScreen>
       CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
     );
 
-    _checkAuthenticationStatus();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkAuthenticationStatus();
+    });
   }
 
   Future<void> _checkAuthenticationStatus() async {
     print("🔄 SplashScreen: Starting authentication check...");
-    
+
     await Future.delayed(const Duration(seconds: 2));
 
     if (!mounted) return;
 
-    final authService = Provider.of<AuthService>(context, listen: false);
     bool loggedIn = false;
-
     try {
+      final authService = Provider.of<AuthService>(context, listen: false);
       loggedIn = await authService.isLoggedIn();
       print("✅ SplashScreen: isLoggedIn = $loggedIn");
       print("👤 Current user: ${authService.currentUser?.email ?? 'None'}");
     } catch (e) {
-      print("❌ Error checking login status: $e");
+      print("❌ Error during login check: $e");
     }
 
     if (!mounted) return;
-
-    print("🔀 SplashScreen: Navigating to ${loggedIn ? 'HomeScreen' : 'LoginScreen'}");
 
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
