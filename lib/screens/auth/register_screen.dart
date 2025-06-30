@@ -70,7 +70,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
-            builder: (context) => const MainNavigationScreen(initialIndex: 0),
+            builder: (context) => const HomeScreen(initialIndex: 0),
           ),
         );
       } else {
