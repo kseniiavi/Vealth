@@ -7,7 +7,8 @@ class StorageService {
   static const String _horsesKey = 'vealth_horses';
   static const String _analysisResultsKey = 'vealth_analysis_results';
   static const String _settingsKey = 'vealth_settings';
-  
+  static const String _userSessionKey = 'user_session'; // ✅ NEW
+
   static StorageService? _instance;
   SharedPreferences? _prefs;
 
@@ -29,7 +30,22 @@ class StorageService {
     return _prefs!;
   }
 
-  // Horse Management
+  // ✅ AUTH SESSION
+  Future<void> saveUserSession(Map<String, dynamic> userJson) async {
+    await prefs.setString(_userSessionKey, jsonEncode(userJson));
+  }
+
+  Future<Map<String, dynamic>?> getUserSession() async {
+    final session = prefs.getString(_userSessionKey);
+    if (session == null || session.isEmpty) return null;
+    return jsonDecode(session) as Map<String, dynamic>;
+  }
+
+  Future<void> clearUserSession() async {
+    await prefs.remove(_userSessionKey);
+  }
+
+  // ✅ HORSE DATA
   Future<List<Horse>> getHorses() async {
     try {
       final horsesJson = prefs.getStringList(_horsesKey) ?? [];
@@ -43,14 +59,14 @@ class StorageService {
     try {
       final horses = await getHorses();
       final existingIndex = horses.indexWhere((h) => h.id == horse.id);
-      
+
       if (existingIndex >= 0) {
         horses[existingIndex] = horse.copyWith(updatedAt: DateTime.now());
       } else {
         horses.add(horse);
       }
 
-      final horsesJson = horses.cast<Horse>().map((h) => h.toJsonString()).toList();
+      final horsesJson = horses.map((h) => h.toJsonString()).toList();
       await prefs.setStringList(_horsesKey, horsesJson);
     } catch (e) {
       throw Exception('Failed to save horse: $e');
@@ -61,16 +77,19 @@ class StorageService {
     try {
       final horses = await getHorses();
       horses.removeWhere((h) => h.id == horseId);
-      
-      // Also delete associated analysis results
+
       final analysisResults = await getAnalysisResults();
       analysisResults.removeWhere((result) => result.horseId == horseId);
-      
-      final horsesJson = horses.cast<Horse>().map((h) => h.toJsonString()).toList();
-      final resultsJson = analysisResults.map((r) => r.toJsonString()).toList();
-      
-      await prefs.setStringList(_horsesKey, horsesJson);
-      await prefs.setStringList(_analysisResultsKey, resultsJson);
+
+      await prefs.setStringList(
+        _horsesKey,
+        horses.map((h) => h.toJsonString()).toList(),
+      );
+
+      await prefs.setStringList(
+        _analysisResultsKey,
+        analysisResults.map((r) => r.toJsonString()).toList(),
+      );
     } catch (e) {
       throw Exception('Failed to delete horse: $e');
     }
@@ -79,13 +98,13 @@ class StorageService {
   Future<Horse?> getHorse(String horseId) async {
     try {
       final horses = await getHorses();
-      return horses.firstWhere((h) => h.id == horseId);
-    } catch (e) {
+      return horses.firstWhere((h) => h.id == horseId, orElse: () => null);
+    } catch (_) {
       return null;
     }
   }
 
-  // Analysis Results Management
+  // ✅ ANALYSIS RESULTS
   Future<List<AnalysisResult>> getAnalysisResults() async {
     try {
       final resultsJson = prefs.getStringList(_analysisResultsKey) ?? [];
@@ -99,8 +118,7 @@ class StorageService {
     try {
       final results = await getAnalysisResults();
       results.add(result);
-      
-      // Update horse with new analysis ID
+
       final horse = await getHorse(result.horseId);
       if (horse != null) {
         final updatedHorse = horse.copyWith(
@@ -121,7 +139,7 @@ class StorageService {
     try {
       final results = await getAnalysisResults();
       return results.where((r) => r.horseId == horseId).toList();
-    } catch (e) {
+    } catch (_) {
       return [];
     }
   }
@@ -131,12 +149,12 @@ class StorageService {
       final results = await getAnalysisResults();
       results.sort((a, b) => b.analysisDate.compareTo(a.analysisDate));
       return results.take(limit).toList();
-    } catch (e) {
+    } catch (_) {
       return [];
     }
   }
 
-  // Settings Management
+  // ✅ SETTINGS
   Future<void> saveSetting(String key, dynamic value) async {
     try {
       final settings = await getSettings();
@@ -151,7 +169,7 @@ class StorageService {
     try {
       final settings = await getSettings();
       return settings[key] as T? ?? defaultValue;
-    } catch (e) {
+    } catch (_) {
       return defaultValue;
     }
   }
@@ -161,35 +179,32 @@ class StorageService {
       final settingsJson = prefs.getString(_settingsKey);
       if (settingsJson == null) return {};
       return jsonDecode(settingsJson) as Map<String, dynamic>;
-    } catch (e) {
+    } catch (_) {
       return {};
     }
   }
 
-  // Data Management
+  // ✅ ADMIN / MAINTENANCE
   Future<void> clearAllData() async {
-    try {
-      await prefs.remove(_horsesKey);
-      await prefs.remove(_analysisResultsKey);
-      await prefs.remove(_settingsKey);
-    } catch (e) {
-      throw Exception('Failed to clear data: $e');
-    }
+    await prefs.remove(_horsesKey);
+    await prefs.remove(_analysisResultsKey);
+    await prefs.remove(_settingsKey);
+    await prefs.remove(_userSessionKey);
   }
 
   Future<Map<String, int>> getDataStatistics() async {
     try {
       final horses = await getHorses();
       final results = await getAnalysisResults();
-      
+      final recent = results.where((r) =>
+        r.analysisDate.isAfter(DateTime.now().subtract(const Duration(days: 30)))).length;
+
       return {
         'totalHorses': horses.length,
         'totalAnalyses': results.length,
-        'recentAnalyses': results.where((r) => 
-          r.analysisDate.isAfter(DateTime.now().subtract(const Duration(days: 30)))
-        ).length,
+        'recentAnalyses': recent,
       };
-    } catch (e) {
+    } catch (_) {
       return {
         'totalHorses': 0,
         'totalAnalyses': 0,
