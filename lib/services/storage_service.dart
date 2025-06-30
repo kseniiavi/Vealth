@@ -7,7 +7,7 @@ class StorageService {
   static const String _horsesKey = 'vealth_horses';
   static const String _analysisResultsKey = 'vealth_analysis_results';
   static const String _settingsKey = 'vealth_settings';
-  static const String _userSessionKey = 'user_session'; // ✅ NEW
+  static const String _userSessionKey = 'user_session';
 
   static StorageService? _instance;
   SharedPreferences? _prefs;
@@ -95,6 +95,7 @@ class StorageService {
     }
   }
 
+  // ✅ FIXED: Return nullable Horse?
   Future<Horse?> getHorse(String horseId) async {
     try {
       final horses = await getHorses();
