@@ -1,7 +1,7 @@
-import 'package:flutter/foundation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:crypto/crypto.dart';
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
+import 'package:crypto/crypto.dart';
+import '../services/storage_service.dart';
 
 class User {
   final String id;
@@ -40,7 +40,8 @@ class AuthService extends ChangeNotifier {
         email: email,
       );
 
-      await _saveUserSession(user);
+      await StorageService.instance.saveUserSession(user.toJson());
+
       _currentUser = user;
       _isLoggedIn = true;
       notifyListeners();
@@ -63,7 +64,8 @@ class AuthService extends ChangeNotifier {
         email: email,
       );
 
-      await _saveUserSession(user);
+      await StorageService.instance.saveUserSession(user.toJson());
+
       _currentUser = user;
       _isLoggedIn = true;
       notifyListeners();
@@ -78,36 +80,33 @@ class AuthService extends ChangeNotifier {
 
   Future<bool> isLoggedIn() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      final userSession = prefs.getString('user_session');
+      final session = await StorageService.instance.getUserSession();
 
       if (kDebugMode) {
-        print("🔍 Checking stored user session...");
-        print("📦 Raw session data: $userSession");
+        print("🔍 Checking login session...");
+        print("📦 Session data: $session");
       }
 
-      if (userSession != null && userSession.isNotEmpty) {
-        final userData = jsonDecode(userSession);
-        _currentUser = User.fromJson(userData);
+      if (session != null) {
+        _currentUser = User.fromJson(session);
         _isLoggedIn = true;
         notifyListeners();
 
-        if (kDebugMode) print("✅ User is logged in: ${_currentUser!.email}");
+        if (kDebugMode) print("✅ Already logged in: ${_currentUser!.email}");
         return true;
       }
 
-      if (kDebugMode) print("⚠️ No user session found.");
+      if (kDebugMode) print("⚠️ No active session found.");
       return false;
     } catch (e) {
-      if (kDebugMode) print("❌ Error checking login status: $e");
+      if (kDebugMode) print("❌ Error during isLoggedIn check: $e");
       return false;
     }
   }
 
   Future<void> logout() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.remove('user_session');
+      await StorageService.instance.clearUserSession();
 
       _currentUser = null;
       _isLoggedIn = false;
@@ -115,14 +114,8 @@ class AuthService extends ChangeNotifier {
 
       if (kDebugMode) print("👋 User logged out.");
     } catch (e) {
-      if (kDebugMode) print("❌ Error during logout: $e");
+      if (kDebugMode) print("❌ Logout error: $e");
     }
-  }
-
-  Future<void> _saveUserSession(User user) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('user_session', jsonEncode(user.toJson()));
-    if (kDebugMode) print("💾 User session saved: ${user.email}");
   }
 
   String _generateUserId(String email) {
