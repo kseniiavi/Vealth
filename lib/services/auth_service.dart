@@ -88,6 +88,20 @@ class AuthService extends ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('user_session', jsonEncode(user.toJson()));
   }
+  
+  Future<void> logout() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove('user_session');
+      _currentUser = null;
+      _isLoggedIn = false;
+      notifyListeners();
+    } catch (e) {
+      if (kDebugMode) {
+        print("❌ Error during logout: $e");
+      }
+    }
+  }
 
   String _generateUserId(String email) {
     final bytes = utf8.encode(email);
