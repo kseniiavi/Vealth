@@ -4,7 +4,6 @@ import '../../constants/colors.dart';
 import '../../constants/strings.dart';
 import '../../services/auth_service.dart';
 import '../home_screen.dart';
-import '../../widgets/bottom_navigation.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -68,9 +67,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
           ),
         );
 
+        // Fixed: Removed initialIndex parameter
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
-            builder: (context) => const HomeScreen(initialIndex: 0),
+            builder: (context) => const HomeScreen(),
           ),
         );
       } else {
