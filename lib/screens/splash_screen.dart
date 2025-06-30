@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../constants/colors.dart';
@@ -29,21 +30,13 @@ class _SplashScreenState extends State<SplashScreen>
       duration: const Duration(milliseconds: 1000),
     )..repeat(reverse: true);
 
-    _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut,
-    ));
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
+    );
 
-    _scaleAnimation = Tween<double>(
-      begin: 0.5,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.elasticOut,
-    ));
+    _scaleAnimation = Tween<double>(begin: 0.5, end: 1.0).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.elasticOut),
+    );
 
     _bounceAnimation = Tween<double>(begin: 0, end: 10).animate(
       CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
@@ -58,7 +51,18 @@ class _SplashScreenState extends State<SplashScreen>
     if (!mounted) return;
 
     final authService = Provider.of<AuthService>(context, listen: false);
-    final loggedIn = await authService.isLoggedIn();
+    bool loggedIn = false;
+
+    try {
+      loggedIn = await authService.isLoggedIn();
+      if (kDebugMode) {
+        print("✅ SplashScreen: isLoggedIn = $loggedIn");
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print("❌ Error checking login status: $e");
+      }
+    }
 
     if (!mounted) return;
 
