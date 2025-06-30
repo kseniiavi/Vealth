@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'screens/splash_screen.dart';
+import 'screens/auth/login_screen.dart';
+import 'screens/register_screen.dart';
+import 'screens/home_screen.dart';
 import 'services/auth_service.dart';
 import 'services/storage_service.dart';
 import 'constants/colors.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
-  // Initialize services
+
+  // Initialize local storage before running app
   await StorageService.instance.init();
-  
+
   runApp(const VealthApp());
 }
 
@@ -48,7 +51,13 @@ class VealthApp extends StatelessWidget {
             ),
           ),
         ),
-        home: const SplashScreen(),
+        initialRoute: '/',
+        routes: {
+          '/': (context) => const SplashScreen(),
+          '/login': (context) => const LoginScreen(),
+          '/register': (context) => const RegisterScreen(),
+          '/home': (context) => const HomeScreen(),
+        },
       ),
     );
   }
