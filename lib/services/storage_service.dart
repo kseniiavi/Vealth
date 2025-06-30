@@ -98,13 +98,15 @@ class StorageService {
   Future<Horse?> getHorse(String horseId) async {
     try {
       final horses = await getHorses();
-      return horses.firstWhere((h) => h.id == horseId, orElse: () => null);
+      return horses.firstWhere(
+        (h) => h.id == horseId,
+        orElse: () => null,
+      );
     } catch (_) {
       return null;
     }
   }
 
-  // ✅ ANALYSIS RESULTS
   Future<List<AnalysisResult>> getAnalysisResults() async {
     try {
       final resultsJson = prefs.getStringList(_analysisResultsKey) ?? [];
