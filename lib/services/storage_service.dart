@@ -30,7 +30,6 @@ class StorageService {
     return _prefs!;
   }
 
-  // ✅ AUTH SESSION
   Future<void> saveUserSession(Map<String, dynamic> userJson) async {
     await prefs.setString(_userSessionKey, jsonEncode(userJson));
   }
@@ -45,7 +44,6 @@ class StorageService {
     await prefs.remove(_userSessionKey);
   }
 
-  // ✅ HORSE DATA
   Future<List<Horse>> getHorses() async {
     try {
       final horsesJson = prefs.getStringList(_horsesKey) ?? [];
@@ -100,7 +98,7 @@ class StorageService {
       final horses = await getHorses();
       return horses.firstWhere(
         (h) => h.id == horseId,
-        orElse: () => null,
+        orElse: () => null as Horse?,
       );
     } catch (_) {
       return null;
@@ -156,7 +154,6 @@ class StorageService {
     }
   }
 
-  // ✅ SETTINGS
   Future<void> saveSetting(String key, dynamic value) async {
     try {
       final settings = await getSettings();
@@ -186,7 +183,6 @@ class StorageService {
     }
   }
 
-  // ✅ ADMIN / MAINTENANCE
   Future<void> clearAllData() async {
     await prefs.remove(_horsesKey);
     await prefs.remove(_analysisResultsKey);
