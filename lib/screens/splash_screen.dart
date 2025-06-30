@@ -46,6 +46,8 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   Future<void> _checkAuthenticationStatus() async {
+    print("🔄 SplashScreen: Starting authentication check...");
+    
     await Future.delayed(const Duration(seconds: 2));
 
     if (!mounted) return;
@@ -55,14 +57,23 @@ class _SplashScreenState extends State<SplashScreen>
 
     try {
       loggedIn = await authService.isLoggedIn();
-      if (kDebugMode) {
-        print("✅ SplashScreen: isLoggedIn = $loggedIn");
-      }
+      print("✅ SplashScreen: isLoggedIn = $loggedIn");
+      print("👤 Current user: ${authService.currentUser?.email ?? 'None'}");
     } catch (e) {
-      if (kDebugMode) {
-        print("❌ Error checking login status: $e");
-      }
+      print("❌ Error checking login status: $e");
     }
+
+    if (!mounted) return;
+
+    print("🔀 SplashScreen: Navigating to ${loggedIn ? 'HomeScreen' : 'LoginScreen'}");
+
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (context) =>
+            loggedIn ? const HomeScreen() : const LoginScreen(),
+      ),
+    );
+  }
 
     if (!mounted) return;
 
