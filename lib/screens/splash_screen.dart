@@ -75,16 +75,6 @@ class _SplashScreenState extends State<SplashScreen>
     );
   }
 
-    if (!mounted) return;
-
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (context) =>
-            loggedIn ? const HomeScreen() : const LoginScreen(),
-      ),
-    );
-  }
-
   @override
   void dispose() {
     _animationController.dispose();
